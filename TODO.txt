@@ -1,0 +1,3 @@
+- handle incorrect: controller(+), action(-) and value(-)
+- consider parameter validation
+- 
