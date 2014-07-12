@@ -9,6 +9,7 @@ namespace MVC;
 //  - access to services: how to access data vs. services
 
 class View implements View_Interface {
+	use View_Data_Trait;
 	
 	protected $template_path = 'templates';
 	
@@ -35,37 +36,6 @@ class View implements View_Interface {
 	
 	static function create(Application $application, $template, array $data = []){
 		return new self($application, $template, $data);
-	}
-	
-	//------------------------------------------------------
-	// data access
-	//------------------------------------------------------
-	
-	function set($label, $value){
-		$this->data[$label] = $value;
-		return self;
-	}
-	
-	function get($label){
-		return $this->data[$label];
-	}
-	
-	//------------------------------------------------------
-	// array access
-	//------------------------------------------------------
-	// not implemented because I don't like unsetting anything
-	//------------------------------------------------------
-	
-	//------------------------------------------------------
-	// object access
-	//------------------------------------------------------
-	
-	function __set($key, $value){
-		$this->data[$key] = $value;
-	}
-	
-	function __get($key){
-		return $this->data[$key];
 	}
 	
 	//------------------------------------------------------
