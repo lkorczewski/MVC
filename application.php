@@ -7,7 +7,6 @@ use \Config\Config_Interface;
 class Application {
 	
 	protected $services;
-	//protected $default_services = [];
 	
 	// constructors
 	
@@ -34,6 +33,10 @@ class Application {
 	// service access
 	// TODO: finish
 	
+	function has($key){
+		return $this->services->has($key);
+	}
+
 	function get($key){
 		if(!$this->services->has($key)){
 			return false;
