@@ -2,6 +2,8 @@
 
 namespace MVC;
 
+use Closure;
+
 class Service_Container implements Service_Container_Interface{
 	
 	protected $definitions  = [];
@@ -11,7 +13,7 @@ class Service_Container implements Service_Container_Interface{
 	// constructors
 	//------------------------------------------------------
 	// allowed definitions:
-	//  - string - class name to be instantiated
+	//  - string - name of the class to be instantiated
 	//  - callback($service_manager) returning an instance
 	//  - object instance
 	//------------------------------------------------------
@@ -86,7 +88,7 @@ class Service_Container implements Service_Container_Interface{
 			return new $definition;
 		}
 		
-		if($definition instanceof \Closure){
+		if($definition instanceof Closure){
 			return $definition($this);
 		}
 		
