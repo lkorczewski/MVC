@@ -103,9 +103,9 @@ class Segmented_Router implements Router_Interface {
 			return true;
 		}
 		
-		echo '<pre>';
-		echo var_dump($_SERVER);
-		echo '</pre>';
+		//echo '<pre>';
+		//echo var_dump($_SERVER);
+		//echo '</pre>';
 		
 		if(isset($_SERVER['PATH_INFO'])){
 			
