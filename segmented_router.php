@@ -2,64 +2,9 @@
 
 namespace MVC;
 
-class Segmented_Router implements Router_Interface {
-	
-	const STATE_UNPARSED  = 0;
-	const STATE_PARSED    = 1;
-	
-	protected $state = self::STATE_UNPARSED;
+class Segmented_Router extends Router implements Router_Interface {
 	
 	protected $services;
-	
-	protected $controller  = 'home';
-	protected $action      = 'index';
-	protected $parameters  = [];
-	
-	//-------------------------------------------------
-	// constructor
-	//-------------------------------------------------
-	
-	function __construct(Service_Container_Interface $services){
-		
-		// TODO: config access should be lazy
-		if($services->has('config')){
-			
-			$config = $services->get('config');
-			
-			if($config->has('default_controller')){
-				$controller = $config->get('default_controller');
-			}
-			
-			if($config->has('default_action')){
-				$action = $config->get('default_action');
-			}
-		}
-		
-	}
-	
-	//-------------------------------------------------
-	// getting route components // TODO: terminology!
-	//-------------------------------------------------
-	
-	function get_controller(){
-		$this->parse_url();
-		return $this->controller;
-	}
-	
-	function get_action(){
-		$this->parse_url();
-		return $this->action;
-	}
-	
-	function get_parameters(){
-		$this->parse_url();
-		return $this->parameters;
-	}
-	
-	function get_parameter($index){
-		$this->parse_url();
-		return $this->parameters[$index];
-	}
 	
 	//-------------------------------------------------
 	// making link out of components
@@ -97,15 +42,7 @@ class Segmented_Router implements Router_Interface {
 	//   may be circumvented with substr(PHP_SELF, strlen(SCRIPT_NAME))!
 	//-------------------------------------------------
 	
-	protected function parse_url(){
-		
-		if($this->state == self::STATE_PARSED){
-			return true;
-		}
-		
-		//echo '<pre>';
-		//echo var_dump($_SERVER);
-		//echo '</pre>';
+	protected function parse(){
 		
 		if(isset($_SERVER['PATH_INFO'])){
 			
@@ -125,10 +62,11 @@ class Segmented_Router implements Router_Interface {
 			
 		}
 		
-		$this->state = self::STATE_PARSED;
-		
-		return true;
 	}
+	
+	//-------------------------------------------------
+	// getting script base
+	//-------------------------------------------------
 	
 	protected function get_script_base(){
 		// removing "/index.php"

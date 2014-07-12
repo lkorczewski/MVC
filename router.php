@@ -2,82 +2,61 @@
 
 namespace MVC;
 
-//-------------------------------------------------
-// TODO:
-//  - default values
-//  - parameters, not value
-//-------------------------------------------------
-
-class Router implements Router_Interface {
-	const STATE_NOT_PARSED  = 0;
-	const STATE_PARSED      = 1;
+abstract class Router {
 	
-	protected $state = self::STATE_NOT_PARSED;
+	const STATE_UNPARSED  = 0;
+	const STATE_PARSED    = 1;
 	
-	protected $application;
+	protected $state = self::STATE_UNPARSED;
 	
 	protected $controller  = 'home';
 	protected $action      = 'index';
-	protected $value;
+	protected $parameters  = [];
 	
-	//-------------------------------------------------
-	// making link
-	//-------------------------------------------------
-	// it rather belongs to some html layer
-	
-	function make_link($controller = null, $action = null, $value = null){
-		$parameters = [];
-		if($controller){
-			$parameters['c'] = $controller;
+	function __construct(Service_Container_Interface $services){
+		
+		// TODO: lazy config access
+		if($services->has('config')){
+			
+			$config = $services->get('config');
+			
+			if($config->has('default_controller')){
+				$controller = $config->get('default_controller');
+			}
+			
+			if($config->has('default_action')){
+				$action = $config->get('default_action');
+			}
 		}
-		if($action){
-			$parameters['a'] = $action;
-		}
-		if($value){
-			$parameters['v'] = $value;
-		}
-		return '?' . implode('&', $parameters);
+		
 	}
 	
-	//-------------------------------------------------
-	// obtaining parameters
-	//-------------------------------------------------
+	// getting route components
 	
 	function get_controller(){
-		$this->parse();
+		$this->parse_if_needed();
 		return $this->controller;
 	}
 	
 	function get_action(){
-		$this->parse();
+		$this->parse_if_needed();
 		return $this->action;
 	}
 	
 	function get_parameters(){
-		$this->parse();
-		return array($this->value);
+		$this->parse_if_needed();
+		return $this->parameters;
 	}
 	
-	//-------------------------------------------------
-	// parsing request
-	//-------------------------------------------------
-	// TODO: bad naming: "parse" suggests the parsing
-	// takes place each time the method is called
-	// which is not true
+	function get_parameter($key){
+		$this->parse_if_needed();
+		return $this->parameters['key'];
+	}
 	
-	protected function parse(){
-		if($this->state == self::STATE_NOT_PARSED){
-			if(isset($_GET['c'])){
-				$this->controller = $_GET['c'];
-			}
-			if(isset($_GET['a'])){
-				$this->action = $_GET['a'];
-			}
-			if(isset($_GET['v'])){
-				$this->value = $_GET['v'];
-			}
-			
-			$this->state == self::STATE_PARSED;
+	function parse_if_needed(){
+		if($this->state == self::STATE_UNPARSED){
+			$this->parse();
+			$this->state = self::STATE_PARSED;
 		}
 	}
 	
