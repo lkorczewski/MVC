@@ -17,7 +17,7 @@ class Application {
 			'router'      => function() { return new \MVC\Segmented_Router($this->services); },
 			'dispatcher'  => function() { return new \MVC\Dispatcher($this); },
 			'view'        => function() { return new \MVC\View_Factory($this); },
-			'html'        => '\MVC\HTML',
+			'html'        => function() { return new \MVC\HTML($this); },
 		]);
 		
 		// TODO: to be moved
