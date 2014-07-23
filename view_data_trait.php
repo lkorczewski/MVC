@@ -17,7 +17,7 @@ trait View_Data_Trait {
 	
 	function set($label, $value){
 		$this->data[$label] = $value;
-		return self;
+		return $this;
 	}
 	
 	function has($label){
